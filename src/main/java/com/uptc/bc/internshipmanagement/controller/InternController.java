@@ -45,4 +45,12 @@ public class InternController {
     public ResponseEntity<List<InternDTO>> getInternsByStatus(@PathVariable String status) {
         return ResponseEntity.ok(internService.getInternsByStatus(status));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<InternDTO> updateIntern(@PathVariable Integer id, @RequestBody InternDTO dto) {
+    InternDTO updated = internService.updateIntern(id, dto);
+    return ResponseEntity.ok(updated);
+    }
+    
+
 }

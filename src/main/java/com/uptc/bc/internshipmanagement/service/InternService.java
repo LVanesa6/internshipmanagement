@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.uptc.bc.internshipmanagement.dto.InternDTO;
 import com.uptc.bc.internshipmanagement.entity.Intern;
 import com.uptc.bc.internshipmanagement.entity.User;
+import com.uptc.bc.internshipmanagement.mapper.InternMapper;
 import com.uptc.bc.internshipmanagement.repository.InternRepository;
 import com.uptc.bc.internshipmanagement.repository.UserRepository;
 
@@ -20,8 +21,10 @@ public class InternService {
     private final InternRepository internRepository;
     private final UserRepository userRepository;
     private final KeycloakService keycloakService;
+    private final InternMapper internMapper;  // <-- Inyección del mapper
 
     public InternDTO createIntern(InternDTO dto) {
+       
         String baseUsername = dto.getName().split(" ")[0].toLowerCase();
         String username = generateUniqueUsername(baseUsername);
 
@@ -48,26 +51,21 @@ public class InternService {
         localUser.setIntern(intern);
         userRepository.save(localUser);
 
-        return toDTO(intern);
+        // Usar mapper para convertir a DTO
+        return internMapper.toDTO(intern);
     }
 
     public void deleteIntern(Integer id) {
         Intern intern = internRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Intern not found"));
 
-        // Buscar el usuario asociado al Intern
         User user = userRepository.findByIntern(intern)
                 .orElseThrow(() -> new RuntimeException("Associated user not found"));
 
         String username = user.getUsername();
 
-        // Eliminar usuario de Keycloak
         keycloakService.deleteUserByUsername(username);
-
-        // Eliminar usuario de base de datos local
         userRepository.delete(user);
-
-        // Eliminar Intern
         internRepository.delete(intern);
     }
 
@@ -83,33 +81,39 @@ public class InternService {
         return candidate;
     }
 
-    private InternDTO toDTO(Intern intern) {
-        return new InternDTO(
-                intern.getId(),
-                intern.getName(),
-                intern.getAcademicProgram(),
-                intern.getEntryDate(),
-                intern.getPracticeStatus().name(),
-                intern.getSupervisor() != null ? intern.getSupervisor().getId() : null
-        );
+    public List<InternDTO> getAllInterns() {
+        return internRepository.findAll()
+                .stream()
+                .map(internMapper::toDTO)  // Mapper aquí también
+                .collect(Collectors.toList());
     }
 
-public List<InternDTO> getAllInterns() {
-    return internRepository.findAll()
-            .stream()
-            .map(this::toDTO)
-            .collect(Collectors.toList());
-}
-public InternDTO getInternById(Integer id) {
+    public InternDTO getInternById(Integer id) {
+        Intern intern = internRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Intern not found"));
+        return internMapper.toDTO(intern);
+    }
+
+    public List<InternDTO> getInternsByStatus(String status) {
+        return internRepository.findByPracticeStatus(Intern.PracticeStatus.valueOf(status))
+                .stream()
+                .map(internMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+    public InternDTO updateIntern(Integer id, InternDTO dto) {
     Intern intern = internRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Intern not found"));
-    return toDTO(intern);
+        .orElseThrow(() -> new RuntimeException("Intern not found"));
+
+    intern.setName(dto.getName());
+    intern.setAcademicProgram(dto.getAcademicProgram());
+    intern.setEntryDate(dto.getEntryDate());
+    intern.setPracticeStatus(Intern.PracticeStatus.valueOf(dto.getPracticeStatus()));
+    intern.setSupervisor(userRepository.findById(dto.getSupervisorId())
+            .orElseThrow(() -> new RuntimeException("Supervisor not found")));
+
+    internRepository.save(intern);
+
+    return internMapper.toDTO(intern);
 }
 
-public List<InternDTO> getInternsByStatus(String status) {
-    return internRepository.findByPracticeStatus(Intern.PracticeStatus.valueOf(status))
-            .stream()
-            .map(this::toDTO)
-            .collect(Collectors.toList());
-}
 }

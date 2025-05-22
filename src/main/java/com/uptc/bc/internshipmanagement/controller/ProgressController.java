@@ -2,6 +2,7 @@ package com.uptc.bc.internshipmanagement.controller;
 
 import com.uptc.bc.internshipmanagement.dto.AddFeedbackDTO;
 import com.uptc.bc.internshipmanagement.dto.CreateProgressDTO;
+import com.uptc.bc.internshipmanagement.dto.ProgressDTO;
 import com.uptc.bc.internshipmanagement.entity.Progress;
 import com.uptc.bc.internshipmanagement.service.ProgressService;
 
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/progress")
@@ -43,8 +45,13 @@ public class ProgressController {
         return ResponseEntity.ok(updated);
     }
 
-    @GetMapping("/intern/{internId}")
-    public ResponseEntity<List<Progress>> getProgressByIntern(@PathVariable Integer internId) {
-        return ResponseEntity.ok(progressService.getProgressByIntern(internId));
+   @GetMapping("/intern/{internId}")
+    public ResponseEntity<List<ProgressDTO>> getProgressByIntern(@PathVariable Integer internId) {
+        List<Progress> avances = progressService.getProgressByIntern(internId);
+        List<ProgressDTO> dtos = avances.stream()
+                                       .map(progress -> new ProgressDTO(progress))
+                                       .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
+    
 }

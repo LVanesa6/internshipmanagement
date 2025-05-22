@@ -1,5 +1,6 @@
 package com.uptc.bc.internshipmanagement.service;
 
+import com.uptc.bc.internshipmanagement.dto.InternDTO;
 import com.uptc.bc.internshipmanagement.dto.UserDTO;
 import com.uptc.bc.internshipmanagement.entity.User;
 import com.uptc.bc.internshipmanagement.mapper.UserMapper;
@@ -21,7 +22,13 @@ public class UserService {
     public UserDTO getUserById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return userMapper.toDTO(user);
+        UserDTO dto = userMapper.toDTO(user);
+        if (user.getIntern() != null) {
+            InternDTO internDTO = new InternDTO();
+            internDTO.setId(user.getIntern().getId());
+            dto.setIntern(internDTO);
+        }
+        return dto;
     }
 
     public UserDTO saveUser(UserDTO userDTO) {
@@ -36,6 +43,21 @@ public class UserService {
 
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
+                .stream()
+                .map(user -> {
+                    UserDTO dto = userMapper.toDTO(user);
+                    if (user.getIntern() != null) {
+                        InternDTO internDTO = new InternDTO();
+                        internDTO.setId(user.getIntern().getId());
+                        dto.setIntern(internDTO);
+                    }
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDTO> getSupervisors() {
+        return userRepository.findByRole(User.Role.SUPERVISOR)
                 .stream()
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());

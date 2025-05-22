@@ -9,8 +9,10 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     @Mapping(source = "role", target = "role")
+    @Mapping(target = "intern", ignore = true) // 👈 importante
     UserDTO toDTO(User user);
 
     @Mapping(source = "role", target = "role")
+    @Mapping(target = "intern", ignore = true) // si no quieres mapear al guardar
     User toEntity(UserDTO userDTO);
 }

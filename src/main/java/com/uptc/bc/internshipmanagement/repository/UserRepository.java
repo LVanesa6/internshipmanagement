@@ -18,5 +18,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByIntern(Intern intern);
 
-    boolean existsByUsername(String username); // ✅ <--- Esto es lo que te falta
+    boolean existsByUsername(String username); 
 }

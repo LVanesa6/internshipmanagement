@@ -1,6 +1,5 @@
 package com.uptc.bc.internshipmanagement.mapper;
 
-
 import com.uptc.bc.internshipmanagement.dto.InternDTO;
 import com.uptc.bc.internshipmanagement.entity.Intern;
 import org.mapstruct.*;

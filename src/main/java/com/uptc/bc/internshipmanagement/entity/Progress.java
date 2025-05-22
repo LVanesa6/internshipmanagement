@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "progress")
 @Getter
 @Setter
