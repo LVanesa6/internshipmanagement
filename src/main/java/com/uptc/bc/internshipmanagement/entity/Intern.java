@@ -1,11 +1,9 @@
 package com.uptc.bc.internshipmanagement.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -32,8 +30,8 @@ public class Intern {
     private String academicProgram;
 
     @Column(name = "entry_date", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date entryDate;
+    // LocalDate no necesita @Temporal
+    private LocalDate entryDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "practice_status", nullable = false)

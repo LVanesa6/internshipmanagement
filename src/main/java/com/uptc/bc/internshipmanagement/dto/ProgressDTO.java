@@ -1,9 +1,7 @@
 package com.uptc.bc.internshipmanagement.dto;
 
 import lombok.*;
-
 import java.time.LocalDate;
-import java.util.Date;
 
 import com.uptc.bc.internshipmanagement.entity.Progress;
 
@@ -14,7 +12,7 @@ import com.uptc.bc.internshipmanagement.entity.Progress;
 public class ProgressDTO {
     private Integer id;
     private String description;
-    private Date registrationDate;
+    private LocalDate registrationDate;  // <-- Cambiado a LocalDate
     private String feedback;
     private Integer internId;
 
@@ -25,6 +23,4 @@ public class ProgressDTO {
         this.feedback = progress.getFeedback();
         this.internId = progress.getIntern() != null ? progress.getIntern().getId() : null;
     }
-
 }
-

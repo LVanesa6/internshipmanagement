@@ -1,6 +1,5 @@
 package com.uptc.bc.internshipmanagement.controller;
 
-
 import com.uptc.bc.internshipmanagement.dto.InternDTO;
 import com.uptc.bc.internshipmanagement.service.InternService;
 
@@ -48,9 +47,13 @@ public class InternController {
 
     @PutMapping("/{id}")
     public ResponseEntity<InternDTO> updateIntern(@PathVariable Integer id, @RequestBody InternDTO dto) {
-    InternDTO updated = internService.updateIntern(id, dto);
-    return ResponseEntity.ok(updated);
+        InternDTO updated = internService.updateIntern(id, dto);
+        return ResponseEntity.ok(updated);
     }
-    
+
+    @GetMapping(params = "supervisorId")
+    public ResponseEntity<List<InternDTO>> getInternsBySupervisor(@RequestParam Integer supervisorId) {
+        return ResponseEntity.ok(internService.getInternsBySupervisor(supervisorId));
+    }
 
 }

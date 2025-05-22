@@ -2,7 +2,7 @@ package com.uptc.bc.internshipmanagement.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -23,8 +23,7 @@ public class Progress {
     private String description;
 
     @Column(name = "registration_date", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date registrationDate;
+    private LocalDate registrationDate;  // <-- Cambiado a LocalDate, quitar @Temporal
 
     @Column(columnDefinition = "TEXT")
     private String feedback;

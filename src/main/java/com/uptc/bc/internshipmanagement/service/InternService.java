@@ -115,5 +115,12 @@ public class InternService {
 
     return internMapper.toDTO(intern);
 }
+public List<InternDTO> getInternsBySupervisor(Integer supervisorId) {
+    return internRepository.findBySupervisorId(supervisorId)
+            .stream()
+            .map(internMapper::toDTO)
+            .toList();
+}
+
 
 }

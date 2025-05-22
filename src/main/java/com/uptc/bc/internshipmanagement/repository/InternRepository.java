@@ -11,4 +11,6 @@ import java.util.List;
 public interface InternRepository extends JpaRepository<Intern, Integer> {
 
     List<Intern> findByPracticeStatus(PracticeStatus status);
+    List<Intern> findBySupervisorId(Integer supervisorId);
+
 }

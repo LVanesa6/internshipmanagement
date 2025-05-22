@@ -1,16 +1,14 @@
 package com.uptc.bc.internshipmanagement.dto;
 
 import lombok.*;
-
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateProgressDTO {
-
     private String description;
-    private Date registrationDate;
+    private LocalDate registrationDate;  // <-- Cambiado a LocalDate
     private Integer internId;
 }
