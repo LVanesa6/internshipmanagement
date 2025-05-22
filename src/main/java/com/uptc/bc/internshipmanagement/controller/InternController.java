@@ -40,9 +40,10 @@ public class InternController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/status/{status}")
+    @GetMapping("/interns/status/{status}")
     public ResponseEntity<List<InternDTO>> getInternsByStatus(@PathVariable String status) {
-        return ResponseEntity.ok(internService.getInternsByStatus(status));
+        List<InternDTO> interns = internService.getInternsByStatus(status);
+        return ResponseEntity.ok(interns);
     }
 
     @PutMapping("/{id}")

@@ -95,11 +95,16 @@ public class InternService {
     }
 
     public List<InternDTO> getInternsByStatus(String status) {
-        return internRepository.findByPracticeStatus(Intern.PracticeStatus.valueOf(status))
+    try {
+        Intern.PracticeStatus enumStatus = Intern.PracticeStatus.valueOf(status.toUpperCase());
+        return internRepository.findByPracticeStatus(enumStatus)
                 .stream()
                 .map(internMapper::toDTO)
                 .collect(Collectors.toList());
+    } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Invalid status: " + status + ". Valid values are: ACTIVE, FINISHED, PENDING");
     }
+}
     public InternDTO updateIntern(Integer id, InternDTO dto) {
     Intern intern = internRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Intern not found"));
