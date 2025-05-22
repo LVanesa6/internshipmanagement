@@ -40,7 +40,7 @@ public class InternController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/interns/status/{status}")
+    @GetMapping("/status/{status}")
     public ResponseEntity<List<InternDTO>> getInternsByStatus(@PathVariable String status) {
         List<InternDTO> interns = internService.getInternsByStatus(status);
         return ResponseEntity.ok(interns);
